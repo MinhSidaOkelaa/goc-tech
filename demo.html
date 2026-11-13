@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><title>Demo Automation Workflow — Góc Tech</title><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>:root{--ink:#171717;--sub:#555;--bg2:#f5f5f5;--line:#dedede}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 "Be Vietnam Pro",Inter,system-ui,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:#fff}
+a{color:inherit}button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+header.top{border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:10}header.top .in{display:flex;align-items:center;gap:20px;padding:12px 24px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;text-decoration:none}.logo i{display:grid;place-items:center;width:32px;height:32px;border-radius:8px;background:var(--ink);color:#fff;font-style:normal}
+header.top nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}header.top nav a{text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:500;color:var(--sub)}header.top nav a.on,header.top nav a:hover{color:var(--ink);background:var(--bg2)}
+.b,.b2{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;border-radius:10px;font-weight:600;border:1px solid var(--ink);text-decoration:none}
+.b{background:var(--ink);color:#fff}.b2{background:#fff}.b2:hover{background:var(--bg2)}.b:disabled,.b2:disabled{background:var(--bg2);color:#8a8a8a;border-color:var(--line);cursor:not-allowed}
+h1{font-size:26px;margin:0;letter-spacing:-.02em}h2{font-size:17px;margin:0}.sub{color:var(--sub)}.small{font-size:13px}
+.panel{border:1px solid var(--line);border-radius:12px;background:#fff}.tag{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:99px;padding:2px 10px;font-size:12.5px;font-weight:600;white-space:nowrap}.tag.solid{background:var(--ink);color:#fff;border-color:var(--ink)}.tag.warn{border-color:var(--ink);border-style:dashed}
+table{width:100%;border-collapse:collapse;font-size:14px}th{text-align:left;font-size:12.5px;color:var(--sub);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px}
+.err{font-weight:600;font-size:13.5px;margin-top:6px}
+
+.lay{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;padding:20px 24px;align-items:start}
+.sc{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px 12px;margin-bottom:8px}.sc:hover{border-color:var(--ink)}.sc.on{border:2px solid var(--ink);padding:9px 11px}.sc b{display:block}.sc span{color:var(--sub);font-size:13px}
+.cols{display:grid;grid-template-columns:minmax(360px,430px) minmax(0,1fr);gap:20px;align-items:start}
+.ph{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+iframe{display:block;width:100%;height:720px;border:0;border-radius:0 0 12px 12px}
+.chk{list-style:none;margin:0;padding:8px 16px}.chk li{display:grid;grid-template-columns:24px 1fr;gap:8px;padding:6px 0;border-bottom:1px solid var(--bg2)}.chk li:last-child{border:0}.chk i{font-style:normal;font-weight:700}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;padding:12px 16px;margin:0;font-size:14px}.kv dt{color:var(--sub)}.kv dd{margin:0}
+.acts{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 14px}
+@media(max-width:1100px){.lay,.cols{grid-template-columns:1fr}iframe{height:640px}}
+</style></head><body>
+<header class="top"><div class="in"><a class="logo" href="/"><i>G</i>Góc Tech</a><span class="tag">Demo Automation Workflow</span>
+<nav><a href="/" target="_blank">Cửa hàng ↗</a><a href="/demo" class="on">Demo workflow</a><a href="/admin">Admin</a><a href="/admin/tech">Bảng kỹ thuật</a></nav></div></header>
+<div class="lay">
+<aside><h1 style="font-size:20px;margin-bottom:4px">Sáu tình huống</h1><p class="sub small" style="margin:0 0 12px">Mỗi nút tạo một đơn mẫu riêng bằng một khách demo riêng. Mức rủi ro LOW/HIGH và mã kỹ thuật chỉ hiện ở trang này và trang admin.</p>
+<div id="list"></div><button class="b2" style="width:100%;margin-top:8px" onclick="resetDemo()">Đặt lại demo</button>
+<p class="sub small" id="rnote">“Đặt lại demo” chỉ xóa đơn, email, vận đơn và nhật ký của các phiên demo. Đơn do khách tự đặt ở cửa hàng được giữ nguyên.</p></aside>
+<main id="main"></main></div>
+<script>const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>Number(n).toLocaleString('vi-VN')+' ₫';
+const tm=t=>t?new Date(t*1000).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'';
+async function api(path,body){try{const r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})});if(r.status===403){location.reload();return {ok:false}}return await r.json()}catch(e){return {ok:false,message:'Mất kết nối tới máy chủ.'}}}
+const RES={OK:['✓','Thành công'],FAIL:['✕','Lỗi / dừng'],WARN:['!','Cảnh báo'],INFO:['i','Ghi nhận']};
+function resOf(e){if(e.detail.includes('đã xử lý: bỏ qua'))return ['⟳','Trùng, bỏ qua'];return RES[e.status]||['·',e.status]}
+function logTable(ev){return ev.length?`<table><thead><tr><th>Thời gian</th><th>Dịch vụ</th><th>Sự kiện</th><th>Kết quả</th></tr></thead><tbody>${ev.map(e=>{const [i,t]=resOf(e);return `<tr><td class="mono">${tm(e.time)}</td><td><b>${esc(e.service)}</b></td><td>${esc(e.step.replace(/^\d+\.\s*/,''))}<div class="sub small">${esc(e.detail)}</div></td><td style="white-space:nowrap"><span class="tag ${e.status==='OK'?'solid':e.status==='FAIL'||t.startsWith('Trùng')?'warn':''}">${i} ${t}</span></td></tr>`}).join('')}</tbody></table>`:'<p class="sub" style="padding:16px">Chưa có sự kiện.</p>'}
+
+const ORDER=['low_paid','high','security_fail','payment_unknown','duplicate_event','ghn_down'];
+let SC={},run=null,st=null,timer=null;
+try{run=JSON.parse(sessionStorage.getItem('gt_demo_run'))}catch(e){}
+function list(){$('list').innerHTML=ORDER.map((k,i)=>`<button class="sc ${run&&run.name===k?'on':''}" onclick="start('${k}')"><b>${i+1}. ${esc(SC[k].title)}</b><span>Khách thấy: ${esc(SC[k].sees)}</span></button>`).join('')}
+function frameUrl(r){const [q,h]=r.view.startsWith('?')?r.view.slice(1).split('#'):['',r.view.replace(/^#/,'')];const p=new URLSearchParams(q);p.set('demo_token',r.token);return '/?'+p.toString()+'#'+h}
+async function start(name){const r=await api('/api/demo/run',{name});if(!r.ok)return alertBox(r.message);run={id:r.run_id,name,token:r.token,view:r.view};sessionStorage.setItem('gt_demo_run',JSON.stringify(run));list();shell();poll()}
+function alertBox(t){$('main').innerHTML=`<div class="panel" style="padding:24px"><b>${esc(t)}</b></div>`}
+function shell(){$('main').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px"><h1>${esc(SC[run.name].title)}</h1><span class="sub small mono">${esc(run.id)}</span></div>
+<div class="cols"><section class="panel"><div class="ph"><h2>Khách thấy gì</h2><span><button class="b2" style="min-height:32px;padding:0 10px" onclick="$('fr').src=frameUrl(run)">Tải lại</button> <a class="b2" style="min-height:32px;padding:0 10px" target="_blank" id="open">Mở tab mới ↗</a></span></div><iframe id="fr" title="Màn hình của khách"></iframe></section>
+<div><section class="panel" style="margin-bottom:16px"><div class="ph"><h2>Kết quả cần kiểm tra</h2><span class="sub small">✓ đạt · ○ chờ thao tác · ✕ chưa đạt</span></div><ul class="chk" id="chk"></ul><div class="acts" id="acts"></div></section>
+<section class="panel" style="margin-bottom:16px"><div class="ph"><h2>Đơn mẫu (thông tin kỹ thuật)</h2></div><dl class="kv" id="ord"></dl></section>
+<section class="panel"><div class="ph"><h2>Nhật ký sự kiện giả lập</h2><span class="sub small" id="cnt"></span></div><div id="log" style="overflow-x:auto"></div></section></div></div>`;
+ $('fr').src=frameUrl(run);$('open').href=frameUrl(run)}
+async function poll(){clearInterval(timer);const tick=async()=>{if(!run)return;const r=await api('/api/demo/status',{run_id:run.id});if(!r.ok){if(r.message&&r.message.includes('đặt lại')){run=null;sessionStorage.removeItem('gt_demo_run');list();intro()}return}st=r;paint()};await tick();timer=setInterval(tick,1500)}
+function paint(){if(!$('chk'))return;$('chk').innerHTML=st.checks.map(c=>`<li><i>${c.ok===true?'✓':c.ok===false?'✕':'○'}</i><span class="${c.ok===null?'sub':''}">${esc(c.text)}</span></li>`).join('');
+ $('acts').innerHTML=st.actions.map(([a,t])=>`<button class="b" onclick="act('${a}')">${esc(t)}</button>`).join('');
+ const o=st.order;$('ord').innerHTML=o?`<dt>Mã đơn</dt><dd><b>${o.id}</b> · ${money(o.amount)}</dd><dt>Mức rủi ro</dt><dd><span class="tag ${o.risk==='HIGH'?'warn':''}">${o.risk}</span> <span class="sub small">${esc(o.risk_reasons||'')}</span></dd><dt>order_status</dt><dd class="mono">${o.order_status}</dd><dt>payment_status</dt><dd class="mono">${o.payment_status} · ${esc(o.pay_label)}</dd><dt>Phiên Stripe</dt><dd class="mono">${o.session_id||'chưa tạo'}</dd><dt>Giao hàng</dt><dd>${esc(o.ship_label)}${o.tracking_code?' · <span class="mono">'+o.tracking_code+'</span>':''}</dd><dt>Số vận đơn GHN</dt><dd>${st.counts.shipments}</dd><dt>Email Brevo</dt><dd>${st.counts.emails.length} ${st.counts.emails.length?'('+st.counts.emails.map(esc).join(', ')+')':''}</dd><dt>Số lần ghi PAID</dt><dd>${st.counts.paid_writes}${st.counts.duplicates?' · sự kiện trùng bị bỏ qua: '+st.counts.duplicates:''}</dd><dt></dt><dd><a href="/admin/orders/${o.id}">Mở đơn này ở trang admin</a></dd>`:'<dt>Đơn</dt><dd>Chưa có đơn nào được tạo trong tình huống này.</dd>';
+ $('cnt').textContent=st.events.length+' sự kiện';$('log').innerHTML=logTable(st.events)}
+async function act(a){const r=await api('/api/demo/action',{run_id:run.id,action:a});if(r.ok===false&&r.message)alert(r.message);await poll();const f=$('fr');if(f)try{f.contentWindow.route()}catch(e){}}
+async function resetDemo(){const r=await api('/api/demo/reset');run=null;st=null;clearInterval(timer);sessionStorage.removeItem('gt_demo_run');list();intro();$('rnote').textContent=r.ok?`Đã xóa ${r.removed_orders} đơn demo. Đơn khách tự đặt ở cửa hàng được giữ nguyên.`:'Chưa đặt lại được.'}
+function intro(){$('main').innerHTML=`<div class="panel" style="padding:32px"><h1>Demo Automation Workflow</h1><p class="sub" style="max-width:60ch">Chọn một tình huống ở bên trái. Trang sẽ tạo một đơn mẫu, mở đúng màn hình mà khách nhìn thấy và hiện nhật ký sự kiện giả lập của sáu dịch vụ (OpenAI, Firebase Authentication, Cloudflare Turnstile, Stripe, GHN, Brevo) ngay bên cạnh.</p><p class="sub small">Các tình huống ở trang này luôn chạy bằng dịch vụ giả lập trong máy (kể cả khi đã cấu hình API thật), nên không có giao dịch, vận đơn hay email thật.</p></div>`}
+(async()=>{SC=(await api('/api/demo/list')).scenarios||{};list();if(run){const r=await api('/api/demo/status',{run_id:run.id});if(r.ok){shell();poll();return}run=null}intro()})();
+</script></body></html>

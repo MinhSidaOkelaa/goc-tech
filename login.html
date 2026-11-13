@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><title>Đăng nhập admin — Góc Tech</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#171717;--sub:#5a5a5a;--bg2:#f6f6f6;--line:#e2e2e2;--side:#1d1f22;--amber:#fff6e0;--amberb:#e8c66a;--green:#eaf6ee;--greenb:#9fd0b0;--red:#fdecec;--redb:#e5a5a5}
+*{box-sizing:border-box}html,body{margin:0}body{font:15px/1.5 "Be Vietnam Pro",Inter,system-ui,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:#fff}
+a{color:inherit}button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.b,.b2{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;border-radius:8px;font-weight:600;border:1px solid var(--ink);text-decoration:none;background:#fff}
+.b{background:var(--ink);color:#fff}.b2:hover{background:var(--bg2)}.b:disabled,.b2:disabled{background:var(--bg2);color:#8a8a8a;border-color:var(--line);cursor:not-allowed}
+h1{font-size:22px;margin:0;letter-spacing:-.01em}h2{font-size:16px;margin:0}.sub{color:var(--sub)}.small{font-size:13px}.mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px}
+.tag{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:6px;padding:1px 8px;font-size:12.5px;font-weight:600;white-space:nowrap;background:#fff}
+.tag.wait{background:var(--amber);border-color:var(--amberb)}.tag.ok{background:var(--green);border-color:var(--greenb)}.tag.bad{background:var(--red);border-color:var(--redb)}
+.err{font-weight:600;font-size:13.5px;margin-top:6px}
+
+body{background:var(--bg2);min-height:100vh;display:grid;place-items:center;padding:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;width:min(420px,100%)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;margin-bottom:18px}.logo i{display:grid;place-items:center;width:32px;height:32px;border-radius:8px;background:var(--ink);color:#fff;font-style:normal}
+.acct{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:8px;background:#fff}.acct:hover{border-color:var(--ink)}.acct span{display:block;color:var(--sub);font-size:13px}
+input{width:100%;min-height:40px;border:1px solid var(--line);border-radius:8px;padding:0 10px;margin-top:6px}
+</style></head><body><main class="card">
+<div class="logo"><i>G</i>Góc Tech · Admin</div>
+<h1>Đăng nhập quản trị</h1><p class="sub small">Trang này chỉ dành cho tài khoản có quyền admin. Quyền do backend kiểm tra theo danh sách <span class="mono">ADMIN_EMAILS</span> trong cấu hình.</p>
+<div id="pc" hidden><label for="pass" class="small"><b>Mã truy cập admin</b></label><input id="pass" type="password" autocomplete="off"></div>
+<button class="acct" onclick="go('admin')"><b>Quản trị viên</b><span>admin@goctech.example · có quyền admin</span></button>
+<button class="acct" onclick="go('alice')"><b>Alice</b><span>Tài khoản khách · dùng để thử việc bị từ chối</span></button>
+<div id="msg" class="err" role="alert"></div>
+<p class="small sub" style="margin:16px 0 0">Đăng nhập là giả lập Firebase Authentication, không dùng mật khẩu. <a href="/">Về cửa hàng</a></p>
+</main><script>
+const $=id=>document.getElementById(id);
+fetch('/api/admin/me',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}).then(r=>r.json()).then(r=>{if(r.ok)location.reload();$('pc').hidden=!r.need_passcode});
+async function go(account){$('msg').textContent='';try{const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({account,passcode:$('pass').value})});const d=await r.json();if(d.ok)location.reload();else $('msg').textContent='! '+(d.message||'Không đăng nhập được.')+' (HTTP '+r.status+')'}catch(e){$('msg').textContent='! Mất kết nối tới máy chủ.'}}
+</script></body></html>
